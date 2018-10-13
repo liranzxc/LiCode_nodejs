@@ -7,7 +7,7 @@ var logger = require('morgan');
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://lirannh:Afeka2016@ds111535.mlab.com:11535/dbphotogallery',{useNewUrlParser:true});
-require("./models/Photo");
+require("./Models/Photo");
 
 
 var indexRouter = require('./routes/index');
