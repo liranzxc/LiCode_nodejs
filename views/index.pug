@@ -1,59 +1,6 @@
 extends layout
 block content
-  <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Brand</a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li>
-      </ul>
-      <form class="navbar-form navbar-left">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-  </nav>
-  <br>
+  
   form(action='/upload' method="POST" enctype="multipart/form-data")
       .row
         .col.s12
@@ -103,13 +50,13 @@ block content
             div#carddiv(class="card col s3")
               div#contact(class="card-content")
                 <span class="card-title activator grey-text text-darken-4">פרטים נוספים<i class="material-icons right">more_vert</i></span>
-                <img src = #{pic['path']} alt="image" class="activator responsive-img" style="height: 350px;">
+                <img src =#{pic['path']} alt="image" class="activator responsive-img" style="height: 350px;">
               <div class="card-reveal #b2ebf2 cyan lighten-4">
               <span class="card-title grey-text text-darken-4">פרטים נוספים<i class="material-icons right">close</i></span>
               <p class="card-content center-align"><h5>#{pic['caption']}</h5></p>
               <div class="container center-align">
               form(action="/deletephoto", method="post")
-                  button.btn.waves-effect.waves-light(type='submit' value=pic['path'] name='path' style="position:relative;margin-top:75%;left:50%;") Delete
+                  button.btn.waves-effect.waves-light(type='submit' value=pic['file_image']  name='file_image' style="position:relative;margin-top:75%;left:50%;") Delete
               </div>
               </div>
             if (((index+1) % 4) == 0 )

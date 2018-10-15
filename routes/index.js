@@ -1,16 +1,24 @@
-var upload  = require('./upload');
 var express = require('express');
 var router = express.Router();
+var format = require('format');
 var fs = require('fs');
 var mongoose  = require('mongoose');
+const Multer = require('multer');
+const { Storage } = require('@google-cloud/storage');
 
 var Photo  = mongoose.model('Photos');
+const bucketName = "staging.medicalhackthon.appspot.com";
+
+const storage = new Storage({
+  keyFilename: './key.json'
+});
+
 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  Photo.find({}, ['path','caption'], {sort:{ _id: -1} }, function(err, photos) {
+  Photo.find({}, ['path','caption','file_image'], {sort:{ _id: -1} }, function(err, photos) {
 
     
     if(err) throw err;
@@ -20,26 +28,39 @@ router.get('/', function(req, res, next) {
 });
 });
 
-router.post('/upload', function(req, res) { 
+const multer = Multer({
+  storage: Multer.MemoryStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // no larger than 5mb
+  }
+});
 
-  upload(req, res,(error) => {
-    if(error){
-       res.redirect('/?msg=3');
-    }else{
-      if(req.file == undefined){
-        
-        res.redirect('/?msg=2');
+router.post('/upload',multer.single('photo'), function(req, res,next) {   
+  if (!req.file) {
+    res.status(400).send('No file uploaded.');
+    return;
+  }
+  // Create a new blob in the bucket and upload the file data.
+  const bucket = storage.bucket(bucketName);
+  var name_file = (new Date().getTime().toString()+req.file.originalname);
+  const blob = bucket.file(name_file);
+  const blobStream = blob.createWriteStream({public:true});
 
-      }else{
-           
+  blobStream.on('error', (err) => {
+    next(err);
+  });
+
+  blobStream.on('finish', () => {
+    // The public URL can be used to directly access the file via HTTP.
+    const publicUrl = format(`https://storage.googleapis.com/${bucket.name}/${blob.name}`);
           /**
            * Create new record in mongoDB
            */
-          var fullPath = "files/"+req.file.filename;
-
           var document = {
-            path:     fullPath, 
+            file_image: name_file,
+            path:     publicUrl, 
             caption:   req.body.caption
+
           };
 
         var photo = new Photo(document); 
@@ -49,37 +70,50 @@ router.post('/upload', function(req, res) {
           } 
           res.redirect("/?msg=1");
        });
-    }
-  }
+
+
+   // res.status(200).send(publicUrl);
+  })
+
+  
+
+  blobStream.end(req.file.buffer);
+
 });
-});
+  
+        
 
 router.post("/deletephoto",function(req,res){
 
- var path_img =req.body.path;
- Photo.deleteOne({path:path_img},function(err){
+ var file_name = req.body.file_image;
+ Photo.deleteOne({file_image:file_name},function(err){
   if(err)
   {
     res.redirect('/?msg=5'); // error
   }
+  else
+  {
 
- });
+    
+  const bucket = storage.bucket(bucketName);
+  const blob = bucket.file(file_name);
+  blob.delete(function (err, apiResponse) {
+    if (err) {
+      console.log(err);
+      res.redirect('/?msg=5'); // error
 
- fs.unlink("./public/"+path_img, (err) => {
-  if (err) {
-      console.log("************");
-      console.log("failed to delete local image:"+err);
-      console.log(path_img);
-      res.redirect('/?msg=5');
+    }
+    else {
+      console.log("Deleted successfully");
+      res.redirect('/?msg=4'); // error
 
-  } else {
-    console.log("************");
-    console.log('successfully deleted local image');   
-    console.log(path_img);   
-    res.redirect('/?msg=1');
+    }
+  });
+
   }
 
-});
+
+ });
 
 });
 
