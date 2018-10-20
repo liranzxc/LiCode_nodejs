@@ -1,0 +1,47 @@
+extends layout_m
+block content
+
+    if msg == 1
+        h4 Group upload
+    else if msg == 2
+        h4 unvalid group name
+    h4 Account information
+    <br>
+        <div class="form-row">
+        <div class="form-group col-md-6">
+        <label for="firstname">First name</label>
+        <label type="text" class="form-control" id="firstname" placeholder="1234 Main St"> #{myuser.firstname}
+        </div>
+        <div class="form-group col-md-6">
+        <label for="lastname">Last name</label>
+        <label type="text" class="form-control" id="lastname" placeholder="Apartment, studio, or floor">#{myuser.lastname}
+        </div>
+        <div class="form-group col-md-6">
+        <label for="inputEmail4">Email</label>
+        <label type="email" class="form-control disable" id="inputEmail4" placeholder="Email"> #{myuser.email}
+        </div>
+        </div>
+        </div>
+        hr
+        ul(class="list-group col-md-7")
+            h4 My Group publish
+            if(myuser.grouppublish.length == 0)
+                h5 Dont have any groups
+            else    
+                each group,index in myuser.grouppublish
+                    li(class="list-group-item" style="padding : 20px;")
+                        form(method='POST' action='/deletegroup')
+                                label() #{group}
+                                button.btn.btn-danger(type='submit' name="group" value=group style="float: right;") Delete
+
+        .div(class="list-group col-md-7")
+            form(action="/addgroup", method="post")
+                <div class="input-group input-group-lg">
+                <div class="input-group-prepend"></div>
+                <input type="text" class="form-control" name="name_group" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                button(type="submit" class="btn btn-primary") Add Group                   
+
+
+					
+                            

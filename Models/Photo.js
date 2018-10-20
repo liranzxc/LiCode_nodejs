@@ -6,7 +6,6 @@ var photoSchema = new Schema({
 
   file_image: {type:String},
   path:  { type: String },
-
   caption: { type: String }
   
 });

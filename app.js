@@ -8,10 +8,13 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://lirannh:Afeka2016@ds111535.mlab.com:11535/dbphotogallery',{useNewUrlParser:true});
 require("./Models/Photo");
+require("./Models/User");
 
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var loginRouter = require('./routes/login');
+var RegisterRouter = require('./routes/register');
 
 var app = express();
 
@@ -28,6 +31,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/login', loginRouter);
+app.use('/register', RegisterRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

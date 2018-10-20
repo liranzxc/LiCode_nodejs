@@ -1,0 +1,13 @@
+<div class="form-group">
+			<div class="input-group input-file" name="div_input">
+			<input type="file" class="form-control" name="photo" placeholder='Choose a file...' />
+			<span class="input-group-btn">
+			<button class="btn btn-default btn-choose disabled" type="button">Choose</button>
+			</span>
+			</div>
+			<br>
+			input#caption(type="text" placeholder="Add status" class="form-control" name="caption")
+			<br>
+			<div class="form-group">
+			<button type="submit" name="action" class="btn btn-primary pull-right">Submit</button>
+			<button type="reset" class="btn btn-danger">Reset</button>

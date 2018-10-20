@@ -1,0 +1,7 @@
+
+router.post('/upload',multer.single('photo'), function(req, res,next) {   
+
+  console.log("here");
+});
+  
+ 
